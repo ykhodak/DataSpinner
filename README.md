@@ -68,7 +68,7 @@ void send_generated_delta(const std::vector<std::string>& symbols, PUBLISHER& pu
 The function above will send N number of deltas (whatever is needed to pack delta-structures) over provided PUBLISHER class that knows how to send data over TCP, UDP or some version of DDS. So this API eliminate need to create deltas or split them (builder internally will decide when to send delta, we just add data to it - as much as needed), just a convenience. There is also serialize class to stream structures into array of bytes and back. We used our own implementation for this (avoided protobuf or any other serialize solutions again for performance reason), see BuffMsgArchive.
 
 ## The design of the application.
-At this point we described data structures that will be used to compare protocols. Now the question is what do we compare against - as a benchmark we choose TCP-based protocol because it is easier to reason about and because it is fast (more about it later). We selected libevent - very well written and widely used C-based API that abstracts asynchronous functionality - we rely upon libevent to choose epoll2 or select on particular platform and even to buffer-in receiving socket channel. We will maintain outbound queue our self to handle slow client connections.
+At this point we described data structures that will be used to compare protocols. Now the question is what do we compare against - as a benchmark we choose TCP-based protocol because it is easier to reason about and because it is fast (more about it later). We selected **libevent** - very well written and widely used C-based API that abstracts asynchronous functionality - we rely upon libevent to choose epoll2 or select on particular platform and even to buffer-in receiving socket channel. We will maintain outbound queue our self to handle slow client connections.
 
 ## Server application structure. 
 As simple as possible. 2 threads - one receiving, another sending. Server is busy generating ticks in this fashion:
@@ -105,11 +105,11 @@ So here are results on 1G network with very basic Windows 11 and Ubuntu 24 machi
 ```
 TCP      throughput=340.00 Kt/s latency=18,000 usec
 UDP(raw) throughput=100.00 Kt/s latency=200 usec
-FastDDS  throughput=15 Kt/s     latency=30,000 usec
+DDS      throughput=15 Kt/s     latency=30,000 usec
 ```
-Notice that UDP numbers above are deceiving, the software doesn't implement re-transmissions or any buffering and packet at these speeds do get lost. TCP shows reliable data transmission and FastDDS also keeps packets in line without any gaps.
+Notice that UDP numbers above are deceiving, the software doesn't implement re-transmissions or any buffering and packet at these speeds do get lost. TCP shows reliable data transmission and DDS also keeps packets in line without any gaps.
 
-At this moment we didn't try to introduce buffering and re-transmissions in UDP and used default Quality of Service (QoS) options for FastDDS application. The IDL for DDS looks similar to SOR that we used in TCP and UDP:
+At this moment we didn't try to introduce buffering and re-transmissions in UDP and used default Quality of Service (QoS) options for DDS application. The IDL for DDS looks similar to SOR that we used in TCP and UDP:
 ```
 struct IntData
 {
@@ -141,7 +141,7 @@ struct MdDelta
 ```
 
 ## Building applications
-Spinner framework is a series of binaries, which are organized as publisher/subscriber pairs. They share same underlying code - statically linked library, also they depend on shared libraries to enable libevent and FastDDS functionalities. Here are requirements to build apps:
+Spinner framework is a series of binaries, which are organized as publisher/subscriber pairs. They share same underlying code - statically linked library, also they depend on shared libraries to enable libevent and DDS functionalities. Here are requirements to build apps:
  - latest CMake (we used 3.24)
  - latest gcc or VisualStudio (version 22 was used) compiler with C++23 support (can be lower to C++17)
  - latest gtest and google benchmark

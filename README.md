@@ -152,7 +152,7 @@ Spinner framework is a series of binaries, which are organized as publisher/subs
 Once you have these dependencies installed issue commands in root folder:
 
 ```
-on Linux
+#on Linux
 mkdir build
 cd build
 cmake ..
@@ -160,12 +160,12 @@ make
 ```
 
 ```
-on Windows
+#on Windows
 mkdir build
 cd build
 cmake ..
+#open solution file spinner.sln in build directory
 ```
-open solution file spinner.sln in build directory
 
 
 ## Running framework applications
@@ -178,6 +178,14 @@ cp spinner.properties.sample spinner.properties
 ```
 
 Edit spinner.properties to specify IP of machines used in test, see 'host', 'port', 'admin_port', 'udp_host', 'udp_port'. Make sure ports don't collide in your environment. Edit ws.env to set build type for tests on Windows. You have to use Release to collect statistics.
+Open bash terminal and run same script on Linux & Windows:
+
+```
+./tcp_publisher.bash
+./tcp_subscriber_a.bash
+
+this will start publisher and client with user 'a'. Normally you run these commands to different machines on same network
+```
 
 ## Configurations and logs
 In spinner.properties you can setup connection details as described above and few parameters that controls binaries. This is only configuration file used and is shared among all applications in framework.
@@ -199,3 +207,4 @@ user_b=usr-b
 used in login, we can run many users against same server, the runner bash scripts contain user prefix parameter. This was done to simplify managing of users in test setup.
 ```
 
+Capturing logs. Logs are generated in 'ws_spinner/logs'. After successful run you should see pair of logs for each binary - debug logs and statistics log. Normally we tail statistics logs of subscribers to watch speed dynamics.

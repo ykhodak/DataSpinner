@@ -219,7 +219,10 @@ int spnr::run_tcp_listener(const std::vector<listener_info>& linfo)
                 spnr::errlog("Could not create a listener");
                 return 1;
             }
-            spnr::log("Started listener on port [%d]", i.port);
+
+            char ip[64] = "";
+            inet_ntop(AF_INET, &sin.sin_addr, ip, sizeof(ip));
+            spnr::log("Started listener [%s] on port [%d]", ip, i.port);
         }
     }
 

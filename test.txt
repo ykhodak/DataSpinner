@@ -1,0 +1,15 @@
+benchmark
+ ./BM_ref --benchmark_filter=BM_SOA_serialize_out
+
+profile via perf
+ cd ws_spinner/profile
+  sudo perf stat -p <pid>
+  sudo perf record -g -p <pid> 
+  sudo perf report -G
+  sudo perf record -g ./BM_ref --benchmark_filter=BM_SOA_serialize_out
+
+Run grafana log viewer (Ubuntu)
+ sudo /bin/systemctl start grafana-server
+ http://localhost:3000
+ sudo systemctl start loki
+ journalctl -u loki

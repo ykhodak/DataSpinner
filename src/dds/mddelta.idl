@@ -1,0 +1,27 @@
+struct IntData
+{
+    unsigned short index[6];
+    long value[6];
+};
+
+struct DblData
+{
+    unsigned short index[18];
+    double value[18];
+};
+
+struct StampData
+{
+    unsigned short index[2];
+    unsigned long long value[2];
+};
+
+struct MdDelta
+{
+    unsigned long       session_idx;
+    unsigned long long  wire_tstamp;
+    string              symbol;
+    IntData             int_data;
+    DblData             dbl_data;
+    StampData           stamps;
+};

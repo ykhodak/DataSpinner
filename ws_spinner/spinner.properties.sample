@@ -11,7 +11,7 @@ svr_spin_symbols=AAPL
 emulate_slow_client=0
 publisher_spin_sleep_ns=0
 stat_check_every_n_tick=1000
-stat_upd_every_nsec=0
+stat_upd_every_nsec=2
 idle_on_delta=0
 
 debug_log=dbglog.txt

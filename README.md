@@ -139,3 +139,63 @@ struct MdDelta
     StampData           stamps;
 };
 ```
+
+## Building applications
+Spinner framework is a series of binaries, which are organized as publisher/subscriber pairs. They share same underlying code - statically linked library, also they depend on shared libraries to enable libevent and FastDDS functionalities. Here are requirements to build apps:
+ - latest CMake (we used 3.24)
+ - latest gcc or VisualStudio (version 22 was used) compiler with C++23 support (can be lower to C++17)
+ - latest gtest and google benchmark
+ - vcpkg packaging tool for Windows, it's location has to be set in CMakeLists.txt in root folder.
+ - libevent dev libraries, installed via vcpkg in Windows and any standard way in Linux, it should be visible for CMake
+ - FastDDS framework installed from packaged archives from distributor or built locally.
+ 
+Once you have these dependencies installed issue commands in root folder:
+
+```
+on Linux
+mkdir build
+cd build
+cmake ..
+make
+```
+
+```
+on Windows
+mkdir build
+cd build
+cmake ..
+```
+open solution file spinner.sln in build directory
+
+
+## Running framework applications
+Make sure binaries are built, including unit tests and benchmarks. Go to ws_spinner folder - it is workspace with set of scripts to run binaries and collect statistics.
+
+Issue commands:
+```
+cd ws_spinner
+cp spinner.properties.sample spinner.properties
+```
+
+Edit spinner.properties to specify IP of machines used in test, see 'host', 'port', 'admin_port', 'udp_host', 'udp_port'. Make sure ports don't collide in your environment. Edit ws.env to set build type for tests on Windows. You have to use Release to collect statistics.
+
+## Configurations and logs
+In spinner.properties you can setup connection details as described above and few parameters that controls binaries. This is only configuration file used and is shared among all applications in framework.
+
+```
+publisher_spin_sleep_ns=0
+is set to 1 or above publishers will issue 'sleep' command for number os nanoseconds provided.
+```
+
+```
+stat_upd_every_nsec=2
+defines how often we want to recalculate statistics and update statistics file
+
+```
+
+```
+user_a=usr-a
+user_b=usr-b
+used in login, we can run many users against same server, the runner bash scripts contain user prefix parameter. This was done to simplify managing of users in test setup.
+```
+

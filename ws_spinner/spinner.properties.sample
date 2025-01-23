@@ -1,0 +1,21 @@
+host=localhost
+port=8081
+admin_port=8080
+udp_host=localhost
+udp_port=5000
+user_a=usr-a
+user_b=usr-b
+sub_a=AAPL
+sub_b=INTL
+svr_spin_symbols=AAPL
+emulate_slow_client=0
+publisher_spin_sleep_ns=0
+stat_check_every_n_tick=1000
+stat_upd_every_nsec=0
+idle_on_delta=0
+
+debug_log=dbglog.txt
+stat_log=statlog.txt
+#log_level i-info d-debug v-verbose
+log_level=i
+client_context=client-ctx01

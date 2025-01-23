@@ -1,13 +1,13 @@
 DataSpinner - a framework to compare different protocols for distribution of market data.
 
-##Market data
+## Market data
 It is a set of structures and related protocols designed to maximize throughput and minimize latency of data. Data structures have to be flexible and easy to adapt of changing requirements, also they have to be as fast as possible. We will review data structures later.
 
-##Protocols 
+## Protocols 
 There are just two actually - TCP and UDP. But there are variations in a way they are used. For example there are several middle ware solution, designed for robotics and industrial applications. They allow communications with some guarantied Quality of Service (QoS) over UDP channels which looks particularly interesting in building distributed scalable systems – a bigger systems like exchanges, order management and pricing distributions or smaller ones that need to grow.
 A few more words about protocols - TCP is point to point protocol (p2p), if we decided to build infrastructure on p2p it has to be graph and it will get complicated and hard to maintain fast. UDP on other hand allow building BUS kind of systems, where new nodes that be easily added, it is much easier to maintain and extend, it is scalable. If UDP-based protocols are so good and if they can be made reliable as in one of DDS implementation - why not use them everywhere? This is the question. Maybe we can't answer it in this little research project but we can try to approach it and give rough estimate by comparing throughput&latency between two nodes on network. We will leave whole network (graph of nodes or nodes on the bus) aside for now.
 
-##Data structures.
+## Data structures.
 Finance IT like FIX protocol, which is very simple - collection of tag/value pairs. The power of FIX is it is flexible, probably we can build anything out of FIX. Market data protocols looks much like FIX, it's just they are binary and pairs tag/values are specialized for types and sizes and they are grouped by instrument or symbol and they have to be fast. Usually there is reference data - static data and snapshot - current state of the symbol and delta - changes that are emitted upstream to the clients or consumer services, they are eventually merged into snapshots. In this study we will focus on deltas because they are mainly being distributed. So how can we represent delta - it should have only numerical data and maybe enums, no strings because string are stored in reference and static snapshots. Also they will have indexes, which will describe which part of snapshot particular delta fields changes. We will limit our self with just int32_t and double for values and uint16_t for field index. So each delta can be:
 ```
 struct double_data
@@ -67,10 +67,10 @@ void send_generated_delta(const std::vector<std::string>& symbols, PUBLISHER& pu
 ```
 The function above will send N number of deltas (whatever is needed to pack delta-structures) over provided PUBLISHER class that knows how to send data over TCP, UDP or some version of DDS. So this API eliminate need to create deltas or split them (builder internally will decide when to send delta, we just add data to it - as much as needed), just a convenience. There is also serialize class to stream structures into array of bytes and back. We used our own implementation for this (avoided protobuf or any other serialize solutions again for performance reason), see BuffMsgArchive.
 
-##The design of the application.
+## The design of the application.
 At this point we described data structures that will be used to compare protocols. Now the question is what do we compare against - as a benchmark we choose TCP-based protocol because it is easier to reason about and because it is fast (more about it later). We selected libevent - very well written and widely used C-based API that abstracts asynchronous functionality - we rely upon libevent to choose epoll2 or select on particular platform and even to buffer-in receiving socket channel. We will maintain outbound queue our self to handle slow client connections.
 
-##Server application structure. 
+## Server application structure. 
 As simple as possible. 2 threads - one receiving, another sending. Server is busy generating ticks in this fashion:
 ```
 void task_publisher(){
@@ -82,7 +82,7 @@ void task_publisher(){
   }
 }
 ```
-##Client application 
+## Client application 
 It also has 2 threads - one processing ticks, another sends requests and heartbeats (HB) back. Same structure for UDP connection, except there are no buffers (at a moment), we send/receive data as they come without buffering just to see how fast can we do it. Notice it will result in packet loss. In our protocol deltas are sent with header as any other type of data and header maintains session index number and type of message, also length. Maybe we should present header here:
 ```
 struct MsgHeader

@@ -148,7 +148,12 @@ Spinner framework is a series of binaries, which are organized as publisher/subs
  - vcpkg packaging tool for Windows, it's location has to be set in CMakeLists.txt in root folder.
  - libevent dev libraries, installed via vcpkg in Windows and any standard way in Linux, it should be visible for CMake
  - FastDDS framework installed from packaged archives from distributor or built locally.
- 
+
+For Windows vcpkg can be used to install some dependecies:
+vcpkg install gtest
+vcpkg install benchmark
+vcpkg install libevent
+
 Once you have these dependencies installed issue commands in root folder:
 
 ```

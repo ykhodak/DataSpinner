@@ -155,6 +155,8 @@ vcpkg install gtest
 vcpkg install benchmark
 vcpkg install libevent
 ```
+To disable DDS-based projects set env variable SPINNER_NO_DDS=YES before running cmake
+
 
 Once you have these dependencies installed issue commands in root folder:
 

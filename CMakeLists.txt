@@ -32,5 +32,10 @@ message(STATUS "Path to Libevent: ${Libevent_DIR}")
 add_subdirectory(src/spinner_core)
 add_subdirectory(src)
 add_subdirectory(tests)
-add_subdirectory(src/dds)
+if(DEFINED ENV{SPINNER_NO_DDS})
+  message(STATUS "skip DDS. SPINNER_NO_DDS is defined: $ENV{SPINNER_NO_DDS}")
+else()
+  add_subdirectory(src/dds)
+endif()
+
 

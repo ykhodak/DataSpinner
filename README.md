@@ -150,9 +150,11 @@ Spinner framework is a series of binaries, which are organized as publisher/subs
  - FastDDS framework installed from packaged archives from distributor or built locally.
 
 For Windows vcpkg can be used to install some dependecies:
+```
 vcpkg install gtest
 vcpkg install benchmark
 vcpkg install libevent
+```
 
 Once you have these dependencies installed issue commands in root folder:
 
